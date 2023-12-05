@@ -8,7 +8,7 @@ chit-chat is a simple ruby chat server on cli
 
 
 ## TODO
-- [] If a client connect to server, all client except it need to be notified that it joined the chat, not only one client
-- [] a client can send message to server and broadcast to all client. For now it only connect to server
-- [] explore using Thread
-- [] explore using redis
+- [ ] If a client connect to server, all client except it need to be notified that it joined the chat, not only one client
+- [ ] a client can send message to server and broadcast to all client. For now it only connect to server
+- [ ] explore using Thread
+- [ ] explore using redis
