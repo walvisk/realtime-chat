@@ -1,30 +1,37 @@
 require "socket"
 
-def handle_client(client, clients)
-  username = client.gets.chomp
-  broadcast_all(clients, client, "#{username} has joined the chat")
-
-  while incoming = client.gets
-    chat = incoming.chomp
-    broadcast_all(clients, client, chat)
+class Server
+  def initialize(port = 7007)
+    @server  = TCPServer.new("localhost", port)
+    @clients = []
   end
 
-  client.close
-  clients.delete(client)
-  broadcast_all(clients, client, "#{username} has left the chat")
+  def run!
+    loop do
+      client = @server.accept
+      @clients << client
+
+      Thread.new{ handle_client(client, @clients) }
+    end
+  end
+
+  def handle_client(client, clients)
+    username = client.gets.chomp
+    broadcast_all(clients, client, "#{username} has joined the chat")
+
+    while incoming = client.gets
+      chat = incoming.chomp
+      broadcast_all(clients, client, "(#{username}) > #{chat}")
+    end
+
+    client.close
+    clients.delete(client)
+    broadcast_all(clients, client, "#{username} has left the chat")
+  end
+
+  def broadcast_all(clients, client, msg)
+    clients.each { |cl| cl.puts(msg) if cl != client}
+  end
 end
 
-def broadcast_all(clients, client, msg)
-  clients.each { |cl| cl.puts(msg) if cl != client}
-end
-
-server = TCPServer.new("localhost", 7007)
-puts "Server Establihsed at port 7007"
-
-clients = []
-loop do
-  client = server.accept
-  clients << client
-
-  Thread.new{ handle_client(client, clients) }
-end
+Server.new.run!
