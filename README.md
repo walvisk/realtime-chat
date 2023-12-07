@@ -1,5 +1,5 @@
 ## Overview
-chit-chat is a simple ruby chat server on cli
+realtime-chat is a simple ruby chat server on cli
 
 ## How to Run
 1. go to server dir, and run `ruby server.rb`
