@@ -6,30 +6,17 @@ class Client
   end
 
   def run!
-    setup
-    @threads.each(&:join)
+    loop do
+      print("send: ")
+      mssg = gets.chomp
+      break if mssg == "quit"
+      @client.puts mssg
+
+      incoming = @client.gets.chomp
+      puts "recv: #{incoming}"
+    end
+
     @client.close
-  end
-
-  def setup
-    @client.puts("Client #{rand(1..10)}")
-
-    reading = Thread.new do
-      while incoming = @client.gets
-        chat = incoming.chomp
-        puts chat
-      end
-    end
-    @threads << reading
-
-    writing = Thread.new do
-      print("(me) > ")
-      while sent = gets
-        chat = sent.chomp
-        @client.puts(chat)
-      end
-    end
-    @threads << writing
   end
 end
 
