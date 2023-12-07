@@ -6,14 +6,16 @@ class Client
   end
 
   def run!
-    loop do
-      print("send: ")
-      mssg = gets.chomp
-      break if mssg == "quit"
-      @client.puts mssg
+    print("name: ")
+    name = gets.chomp
+    @client.puts name
 
-      incoming = @client.gets.chomp
-      puts "recv: #{incoming}"
+    loop do
+      incoming = gets.chomp
+      @client.puts incoming
+
+      message = @client.gets.chomp
+      puts message
     end
 
     @client.close
