@@ -7,18 +7,29 @@ class Server
   end
 
   def run!
-    client = @server.accept
-    name = client.gets.chomp
     loop do
-      incoming = client.gets.chomp
-      client.puts("#{name}: #{incoming}")
+      client = @server.accept
+      @clients << client
+
+      name = client.gets.chomp
+      client.puts("Welcome to the chatroom!")
+
+      Thread.new { handle_client(name, client) }
     end
 
     client.close
   end
 
-  def broadcast_all(clients, msg)
-    clients.each { |cl| cl.puts(msg) }
+  def handle_client(name, client)
+    while mssg = client.gets.chomp
+      broadcast_all(@clients, client, "#{name}: #{mssg}")
+    end
+    client.close
+    @clients.delete(client)
+  end
+
+  def broadcast_all(clients, client, msg)
+    clients.each { |cl| cl.puts(msg) if cl != client}
   end
 end
 

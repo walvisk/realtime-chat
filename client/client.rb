@@ -10,12 +10,16 @@ class Client
     name = gets.chomp
     @client.puts name
 
+    Thread.new do
+      loop do
+        message = @client.gets.chomp
+        puts message
+      end
+    end
+
     loop do
       incoming = gets.chomp
       @client.puts incoming
-
-      message = @client.gets.chomp
-      puts message
     end
 
     @client.close
